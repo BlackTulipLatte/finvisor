@@ -1,4 +1,5 @@
 import json
+import subprocess
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
@@ -75,3 +76,5 @@ with open("articles_data.json", "w") as json_file:
 
 # Close the webdriver
 driver.quit()
+
+subprocess.run(["./server"])
