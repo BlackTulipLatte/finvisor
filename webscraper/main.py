@@ -1,3 +1,4 @@
+import json
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
@@ -30,6 +31,7 @@ try:
 except Exception as e:
     print("Error:", e)
 
+
 # Scrape every article
 for title, link in news_articles.items():
     driver.get(link)
@@ -43,16 +45,33 @@ for title, link in news_articles.items():
         # Iterate through the found <p> tags and extract their text
         p_content = "\n".join(paragraph.text for paragraph in paragraphs)
         
-        article_content[title] = p_content
+        # Store both the content and link in the article_content hashmap
+        article_content[title] = {"content": p_content, "link": link}
 
     except Exception as e:
         print("Error:", e)
 
+# Combine all data into a JSON array
+articles_data = []
+for title, data in article_content.items():
+    article_data = {
+        "title": title,
+        "content": data["content"],
+        "link": data["link"]
+    }
+    articles_data.append(article_data)
 
-# Print the hashmap containing news article titles and links
-for title, link in news_articles.items():
-    print(f"{title}: {link}")
+# Convert the JSON array to a JSON-formatted string
+json_string = json.dumps(articles_data, indent=2)
 
-# Print the hashmap containing article content
-for title, content in article_content.items():
-    print(f"{title} Content: {content}")
+# Print the JSON-formatted string
+print(json_string)
+
+# Save the JSON data to a file
+with open("articles_data.json", "w") as json_file:
+    json.dump(articles_data, json_file, indent=2)
+
+
+
+# Close the webdriver
+driver.quit()
