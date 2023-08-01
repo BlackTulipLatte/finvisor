@@ -1,0 +1,10 @@
+version: "3.8"
+services:
+  client:
+    build: ./client
+    container_name: client_container
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./client:/app
+    command: sh -c "npm rebuild esbuild && npm run dev"
